@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>For My Baby 💚</title>
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    background: #dce8d4;
+    color: #263c2d;
+    overflow-x: hidden;
+}
+
+/* Minecraft-style pixel font fallback */
+.pixel {
+    font-family: "Courier New", monospace;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+/* =========================================================
+   PASSWORD SCREEN
+========================================================= */
+
+#lockScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background:
+        linear-gradient(rgba(22,43,30,.45), rgba(22,43,30,.65)),
+        #9ab89a;
+
+    transition: opacity 1s ease, visibility 1s ease;
+}
+
+#lockScreen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Minecraft sky */
+
+.sky {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.moon {
+    position: absolute;
+    width: 85px;
+    height: 85px;
+    background: #fff7cf;
+    right: 12%;
+    top: 12%;
+    box-shadow: 0 0 40px rgba(255,247,207,.5);
+}
+
+.star {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    box-shadow: 0 0 8px white;
+    animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+    from { opacity: .25; transform: scale(.7); }
+    to { opacity: 1; transform: scale(1.3); }
+}
+
+/* password card */
+
+.lockCard {
+    position: relative;
+    z-index: 10;
+
+    width: min(430px, 90%);
+    padding: 42px 32px;
+
+    background: rgba(239,247,233,.95);
+    border: 5px solid #526e58;
+
+    box-shadow:
+        12px 12px 0 #314936,
+        0 0 45px rgba(0,0,0,.25);
+
+    text-align: center;
+
+    animation: cardFloat 3s ease-in-out infinite;
+}
+
+@keyframes cardFloat {
+    0%,100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.pixelHeart {
+    font-size: 55px;
+    animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    15% { transform: scale(1.15); }
+    30% { transform: scale(1); }
+}
+
+.lockCard h1 {
+    margin-top: 15px;
+    color: #38563f;
+    font-size: clamp(25px, 6vw, 38px);
+}
+
+.lockCard p {
+    margin: 12px 0 25px;
+    color: #627a68;
+}
+
+.passwordBox {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.passwordBox input {
+    width: 100%;
+    padding: 16px;
+
+    border: 3px solid #6c8b70;
+    outline: none;
+
+    background: white;
+    color: #314936;
+
+    text-align: center;
+    font-size: 22px;
+    letter-spacing: 8px;
+
+    transition: .3s;
+}
+
+.passwordBox input:focus {
+    border-color: #e8a9bc;
+    box-shadow: 0 0 15px rgba(232,169,188,.35);
+}
+
+.enterBtn {
+    padding: 15px;
+
+    border: none;
+
+    background: #6c8b70;
+    color: white;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 5px 5px 0 #3d563f;
+
+    transition: .2s;
+}
+
+.enterBtn:hover {
+    background: #789a7d;
+    transform: translateY(-2px);
+}
+
+.enterBtn:active {
+    transform: translate(4px,4px);
+    box-shadow: 1px 1px 0 #3d563f;
+}
+
+#error {
+    color: #b84f67;
+    margin-top: 12px;
+    min-height: 20px;
+}
+
+/* =========================================================
+   MAIN WEBSITE
+========================================================= */
+
+#website {
+    display: none;
+    min-height: 100vh;
+}
+
+#website.show {
+    display: block;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #a9c8a8 0%,
+            #c7dcbf 55%,
+            #9dbb91 55%,
+            #78966d 100%
+        );
+}
+
+/* clouds */
+
+.cloud {
+    position: absolute;
+    background: rgba(255,255,255,.65);
+    width: 130px;
+    height: 35px;
+    border-radius: 50px;
+    filter: blur(1px);
+    animation: cloudMove 35s linear infinite;
+}
+
+.cloud:before,
+.cloud:after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+}
+
+.cloud:before {
+    width: 60px;
+    height: 60px;
+    left: 20px;
+    bottom: 0;
+}
+
+.cloud:after {
+    width: 75px;
+    height: 75px;
+    right: 20px;
+    bottom: 0;
+}
+
+.cloud1 {
+    top: 17%;
+    left: -200px;
+}
+
+.cloud2 {
+    top: 30%;
+    left: -300px;
+    animation-delay: 10s;
+    transform: scale(.7);
+}
+
+@keyframes cloudMove {
+    from { left: -250px; }
+    to { left: 120%; }
+}
+
+/* grass */
+
+.grass {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 45%;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #6f9166 0px,
+            #6f9166 45px,
+            #65875d 45px,
+            #65875d 90px
+        );
+}
+
+/* dirt */
+
+.dirt {
+    position: absolute;
+    bottom: 0;
+    height: 18%;
+    width: 100%;
+    background:
+        radial-gradient(circle at 20% 20%, #70563c 3px, transparent 4px),
+        radial-gradient(circle at 60% 70%, #57412e 4px, transparent 5px),
+        #795e42;
+    background-size: 80px 80px;
+}
+
+/* hero content */
+
+.heroContent {
+    position: relative;
+    z-index: 10;
+
+    text-align: center;
+    padding: 30px;
+}
+
+.heroContent .small {
+    font-size: 18px;
+    color: #405c43;
+}
+
+.heroContent h1 {
+    margin: 15px 0;
+
+    font-size: clamp(45px, 10vw, 100px);
+
+    color: #fff;
+    text-shadow:
+        5px 5px 0 #526e58,
+        9px 9px 0 rgba(42,65,47,.25);
+
+    animation: titleFloat 3s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.heroContent .subtitle {
+    font-size: clamp(18px, 4vw, 26px);
+    color: #fff;
+    text-shadow: 2px 2px #526e58;
+}
+
+/* =========================================================
+   UNICORN
+========================================================= */
+
+.unicorn {
+    position: absolute;
+    z-index: 8;
+
+    font-size: 105px;
+
+    bottom: 25%;
+    right: 8%;
+
+    filter: drop-shadow(6px 8px 0 rgba(49,73,54,.2));
+
+    animation:
+        unicornFloat 3s ease-in-out infinite,
+        unicornGlow 2s infinite alternate;
+}
+
+@keyframes unicornFloat {
+    0%,100% {
+        transform: translateY(0) rotate(0);
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(2deg);
+    }
+}
+
+@keyframes unicornGlow {
+    from {
+        filter: drop-shadow(6px 8px 0 rgba(49,73,54,.2));
+    }
+
+    to {
+        filter:
+            drop-shadow(6px 8px 0 rgba(49,73,54,.2))
+            drop-shadow(0 0 20px rgba(255,188,214,.7));
+    }
+}
+
+/* =========================================================
+   MINECRAFT BLOCKS
+========================================================= */
+
+.block {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+
+    border: 3px solid rgba(0,0,0,.15);
+
+    box-shadow:
+        inset 5px 5px rgba(255,255,255,.15),
+        5px 5px rgba(0,0,0,.15);
+
+    animation: blockFloat 5s ease-in-out infinite;
+}
+
+.block.grassBlock {
+    background:
+        linear-gradient(#769f68 0 25%, #76573b 25%);
+}
+
+.block.diamond {
+    background: #7bd5cf;
+}
+
+.block.pink {
+    background: #e6a7bd;
+}
+
+.block.green {
+    background: #789a78;
+}
+
+@keyframes blockFloat {
+    0%,100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+    }
+}
+
+.b1 { left: 8%; top: 25%; }
+.b2 { left: 15%; bottom: 25%; animation-delay: 1s; }
+.b3 { right: 18%; top: 28%; animation-delay: 2s; }
+.b4 { right: 7%; bottom: 35%; animation-delay: 3s; }
+
+/* =========================================================
+   SCROLL BUTTON
+========================================================= */
+
+.scrollBtn {
+    margin-top: 35px;
+
+    display: inline-block;
+
+    padding: 14px 25px;
+
+    background: #f2b6c8;
+    color: #4c3540;
+
+    text-decoration: none;
+
+    border: 3px solid #fff;
+
+    box-shadow: 5px 5px 0 #765968;
+
+    font-weight: bold;
+
+    transition: .3s;
+}
+
+.scrollBtn:hover {
+    transform: translateY(-5px);
+}
+
+/* =========================================================
+   LETTER SECTION
+========================================================= */
+
+.letterSection {
+    position: relative;
+
+    padding: 110px 20px;
+
+    background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,.7), transparent 20%),
+        #e5eedf;
+}
+
+.sectionTitle {
+    text-align: center;
+    font-size: clamp(32px, 7vw, 55px);
+    color: #526e58;
+
+    margin-bottom: 45px;
+}
+
+.letter {
+    max-width: 900px;
+    margin: auto;
+
+    padding: clamp(25px, 5vw, 60px);
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.85),
+            rgba(255,255,255,.85)
+        );
+
+    border: 5px solid #789078;
+
+    box-shadow:
+        12px 12px 0 #c5d6be,
+        0 15px 50px rgba(55,77,58,.15);
+
+    position: relative;
+}
+
+/* letter corners */
+
+.letter:before {
+    content: "🦄";
+    position: absolute;
+
+    top: -30px;
+    left: -25px;
+
+    font-size: 55px;
+}
+
+.letter:after {
+    content: "💗";
+    position: absolute;
+
+    bottom: -25px;
+    right: -20px;
+
+    font-size: 50px;
+}
+
+.letter p {
+    color: #435548;
+
+    font-size: clamp(17px, 2.5vw, 20px);
+
+    line-height: 2;
+
+    margin-bottom: 20px;
+}
+
+/* typewriter */
+
+#typedLetter {
+    white-space: pre-line;
+}
+
+/* =========================================================
+   MEMORY SECTION
+========================================================= */
+
+.memories {
+    padding: 100px 20px;
+
+    background: #b7cdb0;
+
+    text-align: center;
+}
+
+.memoryGrid {
+    max-width: 950px;
+    margin: 50px auto 0;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+
+    gap: 25px;
+}
+
+.memory {
+    min-height: 220px;
+
+    padding: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    background: #f9f7ed;
+
+    border: 4px solid #69806b;
+
+    box-shadow: 7px 7px 0 #738b70;
+
+    transition: .4s;
+}
+
+.memory:hover {
+    transform: translateY(-10px) rotate(-1deg);
+}
+
+.memory span {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.memory h3 {
+    color: #526e58;
+    margin-bottom: 10px;
+}
+
+.memory p {
+    color: #66776a;
+}
+
+/* =========================================================
+   FINAL SECTION
+========================================================= */
+
+.final {
+    min-height: 90vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 60px 20px;
+
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            #8aa889,
+            #526e58
+        );
+
+    color: white;
+}
+
+.finalContent {
+    position: relative;
+    z-index: 5;
+}
+
+.final h2 {
+    font-size: clamp(38px, 8vw, 75px);
+
+    text-shadow: 4px 4px #354d39;
+
+    margin-bottom: 25px;
+}
+
+.final p {
+    max-width: 700px;
+
+    margin: auto;
+
+    font-size: clamp(18px, 3vw, 24px);
+
+    line-height: 1.8;
+}
+
+.finalHeart {
+    font-size: 90px;
+
+    margin-top: 35px;
+
+    animation: heartbeat 1.5s infinite;
+}
+
+/* =========================================================
+   FLOATING HEARTS
+========================================================= */
+
+.floating {
+    position: fixed;
+    bottom: -50px;
+
+    pointer-events: none;
+
+    z-index: 100;
+
+    animation: floatUp linear forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        transform:
+            translateY(0)
+            rotate(0deg)
+            scale(.8);
+
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translateY(-110vh)
+            rotate(360deg)
+            scale(1.2);
+
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   MUSIC BUTTON
+========================================================= */
+
+.musicBtn {
+    position: fixed;
+
+    right: 20px;
+    bottom: 20px;
+
+    z-index: 500;
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 50%;
+
+    border: 3px solid white;
+
+    background: #e7a9bd;
+
+    cursor: pointer;
+
+    font-size: 23px;
+
+    box-shadow: 4px 4px 0 rgba(0,0,0,.25);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:700px) {
+
+    .unicorn {
+        font-size: 70px;
+        right: 4%;
+        bottom: 20%;
+    }
+
+    .block {
+        width: 40px;
+        height: 40px;
+    }
+
+    .letter {
+        padding: 25px 20px;
+    }
+
+    .letter p {
+        line-height: 1.8;
+    }
+
+    .heroContent {
+        padding-bottom: 130px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =======================================================
+     PASSWORD SCREEN
+======================================================= -->
+
+<section id="lockScreen">
+
+    <div class="sky">
+
+        <div class="moon"></div>
+
+        <div class="star" style="left:10%;top:15%;"></div>
+        <div class="star" style="left:22%;top:30%;"></div>
+        <div class="star" style="left:35%;top:12%;"></div>
+        <div class="star" style="left:48%;top:25%;"></div>
+        <div class="star" style="left:61%;top:10%;"></div>
+        <div class="star" style="left:72%;top:35%;"></div>
+        <div class="star" style="left:84%;top:18%;"></div>
+        <div class="star" style="left:92%;top:40%;"></div>
+
+    </div>
+
+    <div class="lockCard">
+
+        <div class="pixelHeart">💗</div>
+
+        <h1 class="pixel">
+            A LITTLE SURPRISE
+        </h1>
+
+        <p>
+            someone made something special for you...
+            <br>
+            enter the secret code to enter 🌿🦄
+        </p>
+
+        <div class="passwordBox">
+
+            <input
+                id="password"
+                type="password"
+                maxlength="4"
+                placeholder="••••"
+                autocomplete="off"
+            >
+
+            <button class="enterBtn" onclick="unlock()">
+                ENTER MY WORLD ✨
+            </button>
+
+        </div>
+
+        <div id="error"></div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     MAIN WEBSITE
+======================================================= -->
+
+<main id="website">
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+
+    <div class="block grassBlock b1"></div>
+    <div class="block pink b2"></div>
+    <div class="block diamond b3"></div>
+    <div class="block green b4"></div>
+
+    <div class="grass"></div>
+    <div class="dirt"></div>
+
+    <div class="unicorn">
+        🦄
+    </div>
+
+    <div class="heroContent">
+
+        <div class="small pixel">
+            HAPPY BOYFRIEND'S DAY
+        </div>
+
+        <h1>
+            my babyyyy 💗
+        </h1>
+
+        <div class="subtitle">
+            welcome to our little world 🌿🦄
+        </div>
+
+        <a href="#letter" class="scrollBtn">
+            OPEN YOUR LETTER 💌
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- LETTER -->
+
+<section class="letterSection" id="letter">
+
+    <h2 class="sectionTitle pixel">
+        a letter for you 💌
+    </h2>
+
+    <div class="letter">
+
+        <p id="typedLetter"></p>
+
+    </div>
+
+</section>
+
+
+<!-- MEMORIES -->
+
+<section class="memories">
+
+    <h2 class="sectionTitle pixel">
+        our little world 🌿
+    </h2>
+
+    <div class="memoryGrid">
+
+        <div class="memory">
+            <span>🌙</span>
+            <h3>late night baatien</h3>
+            <p>
+                the conversations that somehow
+                make hours feel like minutes
+            </p>
+        </div>
+
+        <div class="memory">
+            <span>😂</span>
+            <h3>stupid jokes</h3>
+            <p>
+                the jokes nobody else understands
+                but somehow we find hilarious
+            </p>
+        </div>
+
+        <div class="memory">
+            <span>📸</span>
+            <h3>little moments</h3>
+            <p>
+                every picture, every call,
+                every tiny memory
+            </p>
+        </div>
+
+        <div class="memory">
+            <span>🦄</span>
+            <h3>our fantasy world</h3>
+            <p>
+                a place where it's always
+                us against the problem
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FINAL -->
+
+<section class="final">
+
+    <div class="finalContent">
+
+        <h2 class="pixel">
+            it's always us 💚
+        </h2>
+
+        <p>
+            not me against you.
+            <br>
+            not you against me.
+            <br><br>
+
+            just us...
+            figuring everything out together.
+            <br><br>
+
+            through every difficult moment,
+            every laugh,
+            every call,
+            every memory.
+        </p>
+
+        <div class="finalHeart">
+            💗
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- MUSIC BUTTON -->
+
+<button class="musicBtn" id="musicBtn" onclick="toggleMusic()">
+    🎵
+</button>
+
+
+<!-- =======================================================
+     JAVASCRIPT
+======================================================= -->
+
+<script>
+
+/* =========================================================
+   PASSWORD
+========================================================= */
+
+const correctPassword = "1803";
+
+const passwordInput = document.getElementById("password");
+const error = document.getElementById("error");
+const lockScreen = document.getElementById("lockScreen");
+const website = document.getElementById("website");
+
+function unlock() {
+
+    const enteredPassword = passwordInput.value;
+
+    if (enteredPassword === correctPassword) {
+
+        error.innerHTML = "welcome home 💗";
+
+        lockScreen.classList.add("hidden");
+
+        setTimeout(() => {
+            website.classList.add("show");
+        }, 500);
+
+        startHearts();
+
+        setTimeout(() => {
+            typeLetter();
+        }, 1300);
+
+    } else {
+
+        error.innerHTML = "hmm... that's not the secret code 🥺";
+
+        passwordInput.style.animation = "shake .3s";
+
+        setTimeout(() => {
+            passwordInput.style.animation = "";
+        }, 300);
+
+    }
+}
+
+/* ENTER KEY */
+
+passwordInput.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+        unlock();
+    }
+
+});
+
+
+/* =========================================================
+   LETTER
+========================================================= */
+
+const letterText = `happy boyfriends day my babyyyy, my gupu, my world, my everythinggg 💗
+
+i just want you to know how much i lobe you and how much you mean to me
+
+even if sometimes i don’t have the right words to explain it ik things btw us can be a little difficult sometimes and we won’t always understand each other or agree on everything but i genuinely believe that no matter how difficult things get we will always find a way to manage them tg
+
+i don’t want our relationship to ever feel like “if i do this for you then you have to do this for me” or “if you do it then i’ll do it too”
+
+i want us to do things for each other genuinely dil se because we want to make each other happy because seeing each other happy should make us happy too
+
+n i’ll always be there for you not only wen everything is easy and perfect but also when things are difficult and we dont know what to do
+
+i want us to hold onto each other thru those moments and remind each other that we r on the same side
+
+i hope we always keep making each other happy not bc we have to or not bc we expect smth back but simply bc we lobe each other and genuinely want the other person to smile
+
+n i want us to have so many more memories tg
+
+i want more random late night baatien n more laughing until our stomachs hurt n more stupid inside jokes that nobody else understands but us
+
+more cute little moments n more picturesssss n tiktoks and ofc our calls
+
+i want us to always remember that we r on the same side
+
+n if something goes wrong i don’t want it to become me against u or u against me
+
+i want it to be us trying to figure out the problem tg
+
+in the end i hope we make each other genuinely happy
+
+n not just for a day
+
+not just because we r supposed to
+
+but because we genuinely want to
+
+and i made this website for u 🥺💗
+
+i hope u like it
+
+rafay taught me how to make this web and i wanted to write u this special para telling u this
+
+distance don’t always matter
+
+it’s us. 💚`;
+
+let letterStarted = false;
+
+function typeLetter() {
+
+    if (letterStarted) return;
+
+    letterStarted = true;
+
+    const element = document.getElementById("typedLetter");
+
+    let index = 0;
+
+    function type() {
+
+        if (index < letterText.length) {
+
+            element.textContent += letterText.charAt(index);
+
+            index++;
+
+            /* Faster for normal letters,
+               slower for paragraph breaks */
+
+            let speed = 12;
+
+            if (
+                letterText.charAt(index) === "\n"
+            ) {
+                speed = 120;
+            }
+
+            setTimeout(type, speed);
+
+        }
+
+    }
+
+    type();
+}
+
+
+/* =========================================================
+   FLOATING HEARTS
+========================================================= */
+
+function createHeart() {
+
+    const heart = document.createElement("div");
+
+    heart.classList.add("floating");
+
+    const hearts = [
+        "💗",
+        "💚",
+        "🤍",
+        "✨",
+        "🌸",
+        "🦄"
+    ];
+
+    heart.innerHTML =
+        hearts[Math.floor(Math.random() * hearts.length)];
+
+    heart.style.left =
+        Math.random() * 100 + "vw";
+
+    heart.style.fontSize =
+        (15 + Math.random() * 25) + "px";
+
+    heart.style.animationDuration =
+        (5 + Math.random() * 5) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 10000);
+
+}
+
+function startHearts() {
+
+    setInterval(() => {
+
+        createHeart();
+
+    }, 900);
+
+}
+
+
+/* =========================================================
+   MUSIC
+========================================================= */
+
+/*
+    If you want music:
+
+    1. Put a file called music.mp3 in the same folder
+    2. Uncomment the audio element below in the HTML
+*/
+
+let musicPlaying = false;
+
+/*
+const music = new Audio("music.mp3");
+music.loop = true;
+*/
+
+function toggleMusic() {
+
+    /*
+    if (!musicPlaying) {
+
+        music.play();
+
+        musicPlaying = true;
+
+        document.getElementById("musicBtn").innerHTML = "🔊";
+
+    } else {
+
+        music.pause();
+
+        musicPlaying = false;
+
+        document.getElementById("musicBtn").innerHTML = "🎵";
+
+    }
+    */
+
+    alert(
+        "Put your favorite song in the website folder as music.mp3 and uncomment the music code in index.html 💗"
+    );
+
+}
+
+
+/* =========================================================
+   SCROLL REVEAL
+========================================================= */
+
+const memories = document.querySelectorAll(".memory");
+
+const observer = new IntersectionObserver(
+    entries => {
+
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+                entry.target.style.opacity = "1";
+                entry.target.style.transform =
+                    "translateY(0)";
+
+            }
+
+        });
+
+    },
+    {
+        threshold: .2
+    }
+);
+
+memories.forEach(memory => {
+
+    memory.style.opacity = "0";
+
+    memory.style.transform =
+        "translateY(40px)";
+
+    memory.style.transition =
+        "opacity .8s ease, transform .8s ease";
+
+    observer.observe(memory);
+
+});
+
+
+/* =========================================================
+   SHAKE ANIMATION
+========================================================= */
+
+const style = document.createElement("style");
+
+style.innerHTML = `
+
+@keyframes shake {
+
+    0%,100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-8px);
+    }
+
+    50% {
+        transform: translateX(8px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+}
+
+`;
+
+document.head.appendChild(style);
+
+</script>
+
+</body>
+</html>
